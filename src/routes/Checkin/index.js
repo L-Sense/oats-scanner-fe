@@ -12,8 +12,7 @@ export default function Home() {
 		() => {
 		const imageSrc = webcamRef.current.getScreenshot();
 		// console.log(imageSrc);
-        if (isCheckin) attendanceService.checkin(imageSrc);
-        else attendanceService.checkout(imageSrc);
+        attendanceService.checkin(imageSrc, isCheckin);
 	}, [isCheckin] );
 
 	return (

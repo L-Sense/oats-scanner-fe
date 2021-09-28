@@ -12,13 +12,7 @@ import { useHistory } from 'react-router-dom';
 import { authenticationService } from '../../services/authenticationService';
 
 function handleLogin(email, password, history){
-	// console.log(email, password)
-	authenticationService.login(email, password)
-	.then(
-		history.push('/')
-	).catch(
-		console.log("failed")
-	);
+	authenticationService.login(email, password, history);
 }
 
 export default function Login() {

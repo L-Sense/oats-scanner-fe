@@ -1,6 +1,8 @@
 import axios from "axios";
 import { config } from '../config'
 
+axios.defaults.baseURL = config.SERVICE_URL
+
 export const authenticationService = {
     login,
     logout,
@@ -8,19 +10,18 @@ export const authenticationService = {
     getToken,
 };
 
-function login(username, password) {
-    if (config.DEBUG) {
-        localStorage.setItem("token", "Bearer TESTINGTOKEN");
-        return Promise.resolve();
-    }
-
-    return axios
-        .post("user/login", {
-            name: username,
-            password: password,
+async function login(username, password, history) {
+    return await axios
+        .post("auth/login", {
+            'username': username,
+            'password': password,
         })
         .then((res) => {
-            localStorage.setItem("token", res.data.data.token);
+            localStorage.setItem("token", res.data.data.Authorization);
+            history.push('/');
+        })
+        .catch((err) => {
+            console.log(err);
         });
 }
 
@@ -29,20 +30,12 @@ function logout() {
     return Promise.resolve();
 }
 
-function authorize(){
-    let token = getToken()
-    if (config.DEBUG) {
-        if (token == null) {
-            return Promise.reject()
-        }
-        // console.log("token ", token);
-        return Promise.resolve()
-    }
-    if (token === null) return Promise.reject()
-
-    return axios
-        .post("user/auth", {
-            Authorization: getToken()
+async function authorize(){
+    return await axios
+        .get("auth/check", {
+            headers: {
+                Authorization: getToken(),
+            }
         });
 }
 

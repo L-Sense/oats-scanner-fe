@@ -1,53 +1,24 @@
 import axios from "axios";
 import { config } from '../config'
+import { authenticationService } from "./authenticationService";
+axios.defaults.baseURL = config.SERVICE_URL
 
 export const attendanceService = {
     checkin,
-    checkout,
 };
 
-function checkin(image, token) {
-    if (config.DEBUG) {
-        return Promise.resolve(
-            {
-                "error_code": 0,
-                "message": "success",
-                "data": {
-                    "name": "mmisimpt",
-                    "flag": "On Time",
-                }
-            }
-        ).then((res) => {
-            console.log(res.data)
-        });
-    }
-
-    return axios
-        .post("user/checkin", {
+async function checkin(image, boolCheckin) {
+    console.log(authenticationService.getToken())
+    return await axios
+        .post("scanner/", {
             image: image,
-            Authorization: token,
-        });
-}
-
-function checkout(image, token) {
-    if (config.DEBUG) {
-        return Promise.resolve(
-            {
-                "error_code": 0,
-                "message": "success",
-                "data": {
-                    "name": "mmisimpt",
-                    "flag": "On Time",
-                }
+            isCheckin: boolCheckin,
+        },{
+            headers: {
+                Authorization: authenticationService.getToken(),
             }
-        ).then((res) => {
-            console.log(res.data)
-        });
-    }
-
-    return axios
-        .post("user/checkout", {
-            image: image,
-            Authorization: token,
+        },)
+        .then((res) => {
+            console.log(res);
         });
 }
