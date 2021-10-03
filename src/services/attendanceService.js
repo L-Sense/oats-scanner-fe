@@ -8,7 +8,6 @@ export const attendanceService = {
 };
 
 async function checkin(image, boolCheckin) {
-    console.log(authenticationService.getToken())
     return await axios
         .post("scanner/", {
             image: image,
@@ -19,6 +18,6 @@ async function checkin(image, boolCheckin) {
             }
         },)
         .then((res) => {
-            console.log(res);
+            return res;
         });
 }

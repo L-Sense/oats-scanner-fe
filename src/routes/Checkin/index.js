@@ -1,6 +1,6 @@
 import Webcam from "react-webcam";
 import React from 'react';
-import { Grid, Button, ButtonGroup } from '@material-ui/core';
+import { Grid, Button, ButtonGroup, Typography, CircularProgress } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import { useState } from "react";
 import { attendanceService } from "../../services/attendanceService";
@@ -8,12 +8,19 @@ import { attendanceService } from "../../services/attendanceService";
 export default function Home() {
 	const webcamRef = React.useRef(null);
     const [isCheckin, setIsCheckin] = useState(true);
-	const capture = React.useCallback(
-		() => {
-		const imageSrc = webcamRef.current.getScreenshot();
-		// console.log(imageSrc);
-        attendanceService.checkin(imageSrc, isCheckin);
-	}, [isCheckin] );
+    const [checking, setChecking] = useState(false);
+    const [show, setShow] = useState('');
+
+    async function getImage(){
+        const imageSrc = webcamRef.current.getScreenshot();
+        setChecking(true);
+        const result = await attendanceService.checkin(imageSrc, isCheckin);
+        setChecking(false);
+        setShow(`${result.data.message} ${result.data.data.employee_name ?? ''}`);
+        setTimeout(() => {
+            setShow('');
+        }, 3000);
+    }
 
 	return (
 		<div>
@@ -30,6 +37,13 @@ export default function Home() {
 			    <Webcam audio ={false} ref={webcamRef} />
             </Grid>
             <br/>
+            <Grid container direction="row" justifyContent="center" alignItems="center">
+                {checking && <CircularProgress />}
+                <Typography variant="h6" component="div" gutterBottom sx={{ marginX: 'auto' }}>
+                    {show}
+                </Typography>
+            </Grid>
+            <br/>
 
             <Grid container direction="row" justifyContent="center" alignItems="center">
                 <Button
@@ -37,7 +51,7 @@ export default function Home() {
                     color="primary"
                     size="large"
                     startIcon={<SaveIcon />}
-                    onClick={capture}
+                    onClick={getImage}
                 >
                     Capture
                 </Button>
