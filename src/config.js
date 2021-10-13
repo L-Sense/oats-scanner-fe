@@ -1,4 +1,4 @@
-const baseURL = "http://172.21.148.163:8000/";
+const baseURL = "http://34.87.9.113/";
 
 export const config = {
     SERVICE_URL: `${baseURL}`,
