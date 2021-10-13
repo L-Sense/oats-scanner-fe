@@ -19,9 +19,11 @@ async function login(username, password, history) {
         .then((res) => {
             localStorage.setItem("token", res.data.data.Authorization);
             history.push('/');
+            return true
         })
         .catch((err) => {
-            console.log(err);
+            localStorage.setItem("token", '');
+            return false
         });
 }
 

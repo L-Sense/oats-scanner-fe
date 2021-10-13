@@ -9,7 +9,7 @@ export const attendanceService = {
 
 async function checkin(image, boolCheckin) {
     return await axios
-        .post("scanner/", {
+        .post("scanner", {
             image: image,
             isCheckin: boolCheckin,
         },{
@@ -17,7 +17,10 @@ async function checkin(image, boolCheckin) {
                 Authorization: authenticationService.getToken(),
             }
         },)
-        .then((res) => {
-            return res;
+        .then((result) => {
+            return `${result.data.message} ${result.data.data.employee_name ?? ''}`;
+        })
+        .catch((err) => {
+            return err.response.data.message
         });
 }

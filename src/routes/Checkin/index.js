@@ -14,9 +14,10 @@ export default function Home() {
     async function getImage(){
         const imageSrc = webcamRef.current.getScreenshot();
         setChecking(true);
-        const result = await attendanceService.checkin(imageSrc, isCheckin);
+        const result = await attendanceService.checkin(imageSrc.slice(23), isCheckin);
         setChecking(false);
-        setShow(`${result.data.message} ${result.data.data.employee_name ?? ''}`);
+        console.log(result)
+        setShow(result);
         setTimeout(() => {
             setShow('');
         }, 3000);

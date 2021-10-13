@@ -5,21 +5,30 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
+import { CircularProgress } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import oatslogo from '../../assets/oatslogo.png';
 import useStyles from './theme';
 import { useHistory } from 'react-router-dom';
 import { authenticationService } from '../../services/authenticationService';
 
-function handleLogin(email, password, history){
-	authenticationService.login(email, password, history);
-}
+
 
 export default function Login() {
 	const classes = useStyles();
 	const [email, setEmail] =  useState("");
 	const [password, setPassword] = useState("");
 	const history = useHistory()
+	const [loading, setLoading] = useState(false)
+
+	async function handleLogin(email, password, history){
+		setLoading(true)
+		const result = await authenticationService.login(email, password, history);
+		if (!result){
+			alert("login failed")
+		} 
+		setLoading(false)
+	}
 
 	useEffect(()=>{
 		authenticationService.authorize()
@@ -67,14 +76,23 @@ export default function Login() {
 				label="Password"
 				type="password"
 				id="password"
-				autoComplete="new-password"
+				inputProps={{
+					autoComplete: 'new-password',
+					form: {
+					autoComplete: 'off',
+					},
+				}}
 				onChange={e => setPassword(e.target.value)}
 			/>
+			<div style={{display: 'flex', justifyContent: 'center'}}>
+			{loading && <CircularProgress sx={{ marginX: 'auto' }}/>}
+			</div>
 			<Button
 				fullWidth
 				variant="contained"
 				color="primary"
 				className={classes.submit}
+				disabled={loading}
 				onClick={ () => handleLogin(email, password, history) }
 			>
 				Login
