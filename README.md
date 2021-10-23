@@ -1,5 +1,9 @@
 # CZ3002 L-Sense's OATS Frontend Repository
 
+## About
+
+This project is the scanner front end for Nanyang Technological University's CZ3002 Advanced Software Engineering. It is to be used in conjunction with the oats-backend and OATS-Admin-Dashboard project files, allowing for convenient viewing and management of data via REST APIs.
+
 
 ## Available Scripts
 
